@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body Recomp Calculator - Body Recomp Coach</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body { box-sizing: border-box; }
+    .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); }
+    .card-shadow { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+    .glow-effect { box-shadow: 0 0 20px rgba(34,197,94,0.3); }
+    .pulse-animation { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;}50%{opacity:0.7;} }
+</style>
+</head>
+<body class="gradient-bg min-h-screen text-white">
+
+<header class="bg-slate-900/80 backdrop-blur-sm border-b border-slate-700">
+    <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-lg">BC</span>
+            </div>
+            <h1 class="text-2xl font-bold">Body Recomp Coach</h1>
+        </div>
+        <div class="text-green-400 font-semibold">Free Calculator</div>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-8">
+<div class="text-center mb-12">
+    <h2 class="text-4xl md:text-5xl font-bold mb-4">
+        Transform Your Body in 
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">90 Days</span>
+    </h2>
+    <p class="text-xl text-slate-300 max-w-3xl mx-auto">
+        Discover exactly what your body recomposition could look like and visualize your transformation journey
+    </p>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-8">
+    <!-- Calculator Form -->
+    <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 card-shadow border border-slate-700">
+        <h3 class="text-2xl font-bold mb-6 flex items-center">
+            <span class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">1</span>
+            Your Current Stats
+        </h3>
+        
+        <form id="recompForm" class="space-y-6">
+            <!-- Unit Toggle -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-slate-700 rounded-lg p-1 flex">
+                    <button type="button" id="imperialBtn" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-green-500 text-white">Imperial (lbs/in)</button>
+                    <button type="button" id="metricBtn" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 text-slate-300 hover:text-white">Metric (kg/cm)</button>
+                </div>
+            </div>
+
+            <!-- Gender & Age -->
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label for="gender" class="block text-sm font-medium text-slate-300 mb-2">Gender</label>
+                    <select id="gender" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="age" class="block text-sm font-medium text-slate-300 mb-2">Age</label>
+                    <input type="number" id="age" min="18" max="80" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="25">
+                </div>
+            </div>
+
+            <!-- Weight & Height -->
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label for="weight" class="block text-sm font-medium text-slate-300 mb-2">
+                        Current Weight (<span id="weightUnit">lbs</span>)
+                    </label>
+                    <input type="number" id="weight" min="80" max="400" step="0.1" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="150">
+                </div>
+                <div>
+                    <label for="height" class="block text-sm font-medium text-slate-300 mb-2">
+                        Height (<span id="heightUnit">inches</span>)
+                    </label>
+                    <input type="number" id="height" min="48" max="84" step="0.1" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="68">
+                </div>
+            </div>
+
+            <!-- Body Fat -->
+            <div>
+                <label for="bodyFat" class="block text-sm font-medium text-slate-300 mb-2">Estimated Body Fat % (optional)</label>
+                <input type="number" id="bodyFat" min="5" max="50" step="0.1" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="20">
+            </div>
+
+            <!-- Activity Level & Goal -->
+            <div>
+                <label for="activity" class="block text-sm font-medium text-slate-300 mb-2">Activity Level</label>
+                <select id="activity" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    <option value="sedentary">Sedentary (desk job, little exercise)</option>
+                    <option value="light">Lightly Active (1-3 days/week)</option>
+                    <option value="moderate">Moderately Active (3-5 days/week)</option>
+                    <option value="very">Very Active (6-7 days/week)</option>
+                    <option value="extra">Extremely Active (physical job + exercise)</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="goal" class="block text-sm font-medium text-slate-300 mb-2">Primary Goal</label>
+                <select id="goal" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    <option value="fat-loss">Lose Fat</option>
+                    <option value="muscle-gain">Gain Muscle</option>
+                    <option value="recomp">Body Recomposition</option>
+                    <option value="maintain">Maintain</option>
+                </select>
+            </div>
+
+            <!-- Timeframe -->
+            <div>
+                <label for="timeframe" class="block text-sm font-medium text-slate-300 mb-2">Timeframe</label>
+                <select id="timeframe" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    <option value="30">30 Days</option>
+                    <option value="60">60 Days</option>
+                    <option value="90" selected>90 Days</option>
+                    <option value="120">120 Days</option>
+                    <option value="180">6 Months</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 px-6 rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 glow-effect">
+                Calculate My Transformation
+            </button>
+        </form>
+    </div>
+
+<!-- Results & Email Capture -->
+<div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 card-shadow border border-slate-700">
+    <div id="initialState" class="text-center py-12">
+        <div class="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+        </div>
+        <h3 class="text-2xl font-bold mb-4">Your Transformation Preview</h3>
+        <p class="text-slate-400">Fill out the form to see your projected results</p>
+    </div>
+
+    <div id="resultsPreview" class="hidden">
+        <h3 class="text-2xl font-bold mb-6 flex items-center">
+            <span class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">2</span>
+            Your Transformation Preview
+        </h3>
+
+        <!-- Email capture box for Klaviyo -->
+        <div class="bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-lg p-6 text-center">
+            <h4 class="text-lg font-bold mb-2">🔥 Want Your Complete Nutrition Plan?</h4>
+            <p class="text-slate-300 mb-4">Get your exact daily calories and macro breakdown to achieve these results</p>
+            
+            <div id="emailForm" class="space-y-4">
+                <input type="email" id="emailInput" placeholder="Enter your email address" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                <button id="unlockBtn" class="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-3 px-6 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-300 pulse-animation">
+                    Unlock My Nutrition Plan
+                </button>
+            </div>
+
+            <div id="nutritionResults" class="hidden space-y-4">
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-orange-400" id="dailyCalories">1800</div>
+                        <div class="text-sm text-slate-400">Daily Calories</div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+                            <div class="text-lg font-bold text-blue-400" id="protein">140g</div>
+                            <div class="text-xs text-slate-400">Protein</div>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+                            <div class="text-lg font-bold text-yellow-400" id="carbs">180g</div>
+                            <div class="text-xs text-slate-400">Carbs</div>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+                            <div class="text-lg font-bold text-green-400" id="fats">60g</div>
+                            <div class="text-xs text-slate-400">Fats</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg p-4 text-center">
+                    <p class="text-sm text-slate-300 mb-2">🎁 <strong>Bonus:</strong> Want a FREE 14-day training program to go with this?</p>
+                    <p class="text-xs text-slate-400">DM me on Instagram <span class="text-purple-400 font-semibold">@joshuakristenson</span> after subscribing!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="mt-12 text-center">
+    <p class="text-slate-400 text-sm">
+        * Results are estimates based on average rates of fat loss and muscle gain. Individual results may vary.
+    </p>
+</div>
+</main>
+
+<script>
+let progressChart = null;
+let isMetric = false;
+
+// Unit toggle
+document.getElementById('imperialBtn').addEventListener('click',()=>{ if(isMetric) switchToImperial(); });
+document.getElementById('metricBtn').addEventListener('click',()=>{ if(!isMetric) switchToMetric(); });
+
+function switchToImperial(){
+    isMetric=false;
+    document.getElementById('imperialBtn').className="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-green-500 text-white";
+    document.getElementById('metricBtn').className="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 text-slate-300 hover:text-white";
+    document.getElementById('weightUnit').textContent='lbs';
+    document.getElementById('heightUnit').textContent='inches';
+    let weight=document.getElementById('weight').value;
+    let height=document.getElementById('height').value;
+    if(weight) document.getElementById('weight').value=Math.round(weight*2.20462*10)/10;
+    if(height) document.getElementById('height').value=Math.round(height*0.393701*10)/10;
+    document.getElementById('weight').min=80; document.getElementById('weight').max=400;
+    document.getElementById('height').min=48; document.getElementById('height').max=84;
+}
+
+function switchToMetric(){
+    isMetric=true;
+    document.getElementById('metricBtn').className="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-green-500 text-white";
+    document.getElementById('imperialBtn').className="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 text-slate-300 hover:text-white";
+    document.getElementById('weightUnit').textContent='kg';
+    document.getElementById('heightUnit').textContent='cm';
+    let weight=document.getElementById('weight').value;
+    let height=document.getElementById('height').value;
+    if(weight) document.getElementById('weight').value=Math.round(weight*0.453592*10)/10;
+    if(height) document.getElementById('height').value=Math.round(height*2.54*10)/10;
+    document.getElementById('weight').min=36; document.getElementById('weight').max=180;
+    document.getElementById('height').min=120; document.getElementById('height').max=215;
+}
+
+// Form submission
+document.getElementById('recompForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const weight=parseFloat(document.getElementById('weight').value);
+    const height=parseFloat(document.getElementById('height').value);
+    const bodyFat=parseFloat(document.getElementById('bodyFat').value)||null;
+    const goal=document.getElementById('goal').value;
+    const timeframe=parseInt(document.getElementById('timeframe').value);
+
+    // Estimations
+    const fatLoss=(goal=='fat-loss'||goal=='recomp')?Math.round(weight*0.05*(timeframe/30)) : 0;
+    const muscleGain=(goal=='muscle-gain'||goal=='recomp')?Math.round(weight*0.02*(timeframe/30)) : 0;
+    const projectedWeight=Math.round(weight-fatLoss+muscleGain);
+
+    document.getElementById('currentWeight').textContent=weight;
+    document.getElementById('projectedWeight').textContent=projectedWeight;
+    document.getElementById('fatLoss').textContent=(fatLoss?'-'+fatLoss:'0')+(isMetric?'kg':' lbs');
+    document.getElementById('muscleGain').textContent=(muscleGain?'+'+muscleGain:'0')+(isMetric?'kg':' lbs');
+
+    // Show results
+    document.getElementById('initialState').classList.add('hidden');
+    document.getElementById('resultsPreview').classList.remove('hidden');
+
+    // Chart
+    const ctx=document.getElementById('progressChart').getContext('2d');
+    if(progressChart) progressChart.destroy();
+    progressChart=new Chart(ctx,{
+        type:'line',
+        data:{
+            labels:['Start', 'End'],
+            datasets:[{
+                label:'Weight',
+                data:[weight, projectedWeight],
+                borderColor:'#22c55e',
+                backgroundColor:'rgba(34,197,94,0.3)',
+                fill:true,
+                tension:0.4,
+            }]
+        },
+        options:{responsive:true, plugins:{legend:{display:false}}}
+    });
+});
+
+// Klaviyo success listener
+document.addEventListener('klaviyo:form:submit:success', function(e) {
+    document.getElementById('emailForm').classList.add('hidden');
+    document.getElementById('nutritionResults').classList.remove('hidden');
+
+    const projectedWeight=parseFloat(document.getElementById('projectedWeight').textContent);
+    const dailyCalories=Math.round(projectedWeight*14);
+    const protein=Math.round(projectedWeight*1.8);
+    const fats=Math.round(projectedWeight*0.7);
+    const carbs=Math.round((dailyCalories-(protein*4+fats*9))/4);
+
+    document.getElementById('dailyCalories').textContent=dailyCalories;
+    document.getElementById('protein').textContent=protein+'g';
+    document.getElementById('fats').textContent=fats+'g';
+    document.getElementById('carbs').textContent=carbs+'g';
+});
+</script>
+
+</body>
+</html>
